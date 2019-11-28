@@ -1,30 +1,24 @@
+# password_generator.py
+# A small program to create cyrptographically-suitable random
+# passwords on your local machine.
+
 import secrets
 
-ascii_letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-printable = ascii_letters + '!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~'
-non_conflating = 'acdefghjkmnpqrtuvwxyzACDEFGHJKMNPQRTUVWXYZ234679#$%&()+;<=>?@[]~'
+# Set lengths of passwords desired here
+lengths = [16, 32]
 
-print("")
-lenghts = [16, 32]
+# I chose three sets, but these are mutable. A description followed by the character set
+# which will serve as the available characters.
+sets =  [
+        ["alphanumerics", 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'],
+        ["non-conflating characters", 'acdefghjkmnpqrtuvwxyzACDEFGHJKMNPQRTUVWXYZ234679#$%&()+;<=>?@[]~'],
+        ["alphanumerics and symbols", 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!"#$%&\'()*+,-./:;<=>?@[\\]^_`{|}~']
+        ]   
 
-for length in lenghts:
-    i = 0
-    output = ''
-    while i < length:
-        i += 1
-        output = output + printable[secrets.randbelow(len(printable))]
-    print(output + " "*(32-length) + f"  <= A {length}-char using all")
-
-    i = 0
-    output = ''
-    while i < length:
-        i += 1
-        output = output + ascii_letters[secrets.randbelow(len(ascii_letters))]
-    print(output + " "*(32-length) + f"  <= A {length}-char using only alphanumeric")
-    
-    i = 0
-    output = ''
-    while i < length:
-        i += 1
-        output = output + non_conflating[secrets.randbelow(len(non_conflating))]
-    print(output + " "*(32-length) + f"  <= A {length}-char using non-conflating")
+for length in lengths:
+    for item in sets:
+        # Mmm, code golf. 
+        # Note you can bring that last 'for i in range(length)' out. And use output += ouput + item[1]...
+        # instead of ''.join[....]
+        password = ''.join([item[1][secrets.randbelow(len(item[1]))] for i in range(length)])
+        print(password + " "*(max(lengths)-length) + f"  <= A {length}-char using {item[0]}")
